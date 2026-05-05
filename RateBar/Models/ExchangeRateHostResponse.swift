@@ -1,7 +1,7 @@
 import Foundation
 
 /// Decodable shape returned by the exchangerate.host latest-rates endpoint.
-struct ExchangeRateHostResponse: Decodable {
+struct ExchangeRateHostResponse: Decodable, Sendable {
     let base: String
     let date: String
     let rates: [String: Double]

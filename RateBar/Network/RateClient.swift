@@ -1,7 +1,7 @@
 import Foundation
 
 /// Fetches exchange-rate snapshots from a remote source.
-protocol RateFetching {
+protocol RateFetching: Sendable {
     func fetch(base: String, symbols: [String]) async throws -> RatesSnapshot
 }
 

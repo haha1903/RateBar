@@ -45,7 +45,7 @@
 
 ---
 
-## [TODO] T04: RateService（缓存 + 状态）
+## [DONE] T04: RateService（缓存 + 状态）
 **Dependencies**: T03
 **Goal**: `@Observable` 服务封装 client + UserDefaults 缓存 + isStale 判定。
 **Design**: 见 PLAN.md → T04。`RateBar/Services/RateService.swift` + `Storage/SnapshotStore.swift`。
@@ -56,8 +56,8 @@
 - `testStaleAfterOneHour` (timeout: 5s)
 **Verification**: `xcodebuild test`
 **Delivery Criteria**:
-- [ ] 4 测试通过
-- [ ] 0 warning
+- [x] 4 测试通过
+- [x] 0 warning
 
 ---
 

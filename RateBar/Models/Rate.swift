@@ -1,14 +1,14 @@
 import Foundation
 
 /// A single exchange-rate quote from one base currency to one quote currency.
-struct Rate: Codable, Equatable {
+struct Rate: Codable, Equatable, Sendable {
     let base: String
     let quote: String
     let value: Double
 }
 
 /// A point-in-time collection of exchange rates for one base currency.
-struct RatesSnapshot: Codable, Equatable {
+struct RatesSnapshot: Codable, Equatable, Sendable {
     let base: String
     let fetchedAt: Date
     let rates: [String: Double]

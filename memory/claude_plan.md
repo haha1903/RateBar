@@ -1,35 +1,58 @@
-Visible execution plan for this invocation
+# Current Execution Plan
 
-Scope guard:
-- Complete exactly the first undone task from TODO.md, then stop.
-- Before starting that task, inspect the latest commit for any mentioned pre-existing issues and fix those first if present.
-- Keep changes focused and do not revert unrelated work.
-- I cannot record private chain-of-thought, but this file will contain the concrete plan, decisions, and progress updates needed to audit the work.
+I will execute one task from `TODO.md` and stop after committing it. I will keep this file updated with progress and any plan changes.
 
-Initial plan:
-1. Inspect the latest Git commit message and diff to identify any pre-existing issue called out there.
-2. If the latest commit mentions or introduces an issue that is still present, fix that issue first, test it, document it, and include it in the final commit for this invocation.
-3. Read TODO.md and locate the first incomplete task.
-4. If the task is too large to complete safely in one invocation, update PLAN.md and TODO.md to split it into smaller ordered subtasks, commit that planning change, and execute only the first subtask if appropriate.
-5. Inspect the relevant project files and existing tests to understand local structure and conventions.
-6. Implement the first undone task completely with focused changes.
-7. Add or update tests appropriate to the behavior changed.
-8. Run the relevant build and test commands, fixing any warnings or failures encountered.
-9. Mark the completed task in TODO.md and update PLAN.md with current status.
-10. Commit all changes with a descriptive message.
-11. Stop without starting the next TODO.md task.
+## Constraints
 
-Progress:
-- Plan file created before repository inspection.
-- TODO.md inspected. The first incomplete task is T03: ExchangeRateHost client.
-- Latest commit inspected: `aa463b5411ff9221bc56416024aeba6ab15fa6d2` (`[T02] Add exchange rate data models`). Its message and changed-file list do not mention an unresolved pre-existing issue, so there is no separate pre-task fix identified.
-- T03 is small enough to complete in one invocation without splitting. Next steps: inspect existing model/test/project structure, implement `RateFetching`, `ExchangeRateHostClient`, and `RateClientError`, add URLProtocol-backed client tests, run XCTest, update TODO.md and PLAN.md, then commit.
-- Added `RateBar/Network/RateClient.swift` with the async exchangerate.host client and error mapping.
-- Added `RateBarTests/RateClientTests.swift` with URLProtocol-backed success, HTTP 500, and bad JSON tests. Next step: regenerate the Xcode project and run the test suite.
+- First address any pre-existing issue mentioned by the latest commit before starting the next TODO task.
+- Complete exactly the first incomplete task from `TODO.md`, unless it must be decomposed first.
+- If decomposition is needed, update `PLAN.md` and `TODO.md`, commit that planning change, complete only the first new subtask, then stop.
+- Run relevant tests and fix any issues introduced or exposed by this task.
+- Mark completed work in `TODO.md`, update `PLAN.md`, commit with a clear message, then stop.
+
+## Steps
+
+1. Inspect the latest commit for notes about pre-existing issues.
+2. Check the working tree so existing user changes are not overwritten.
+3. Read `TODO.md` and `PLAN.md`.
+4. Identify the first incomplete task.
+5. If the task is too broad, refine it into smaller subtasks in `TODO.md` and `PLAN.md`.
+6. Implement the selected task or first subtask.
+7. Run the relevant build and test commands.
+8. Fix any build, test, or warning failures related to the task.
+9. Update `TODO.md`, `PLAN.md`, and this progress file.
+10. Commit all changes for this invocation.
+
+## Progress
+
+- Created this plan file before repository inspection.
+- Inspected the latest commit (`[T03] Add ExchangeRateHost client`); it does not mention a known pre-existing issue.
+- Checked `TODO.md`; the first incomplete task is `T04: RateService（缓存 + 状态）`.
+- Read existing model, client, project, and test files to match current Swift/XCTest patterns.
+
+## T04 Implementation Plan
+
+1. Add `RateBar/Storage/SnapshotStore.swift` to encode and decode `RatesSnapshot` in `UserDefaults`.
+2. Add `RateBar/Services/RateService.swift` as a `@MainActor @Observable` service wrapping `RateFetching`.
+3. Ensure refresh success updates state and persists the latest snapshot.
+4. Ensure refresh failure records a user-readable error while preserving the previous snapshot.
+5. Add `RateBarTests/RateServiceTests.swift` covering refresh success, failure with cache preservation, persistence reload, and stale detection.
+6. Regenerate the Xcode project if needed.
+7. Run the test suite and fix any warnings or failures.
+8. Mark T04 complete in `TODO.md`, update `PLAN.md`, commit, and stop.
+
+## Progress Update
+
+- Added `SnapshotStore` for UserDefaults JSON persistence.
+- Added `RateService` with cached snapshot loading, refresh state, error retention, and stale-data detection.
+- Added `RateServiceTests` for the four T04 acceptance tests.
+- First test build failed on Swift 6 strict-concurrency checking because `RateFetching` was not `Sendable`.
+- Updating the fetch protocol and model DTOs to make rate snapshots safe to cross actor boundaries.
+- Second test build reached the test target but found `UserDefaults` crossing into the main-actor service from nonisolated tests.
+- Moving `RateServiceTests` methods onto the main actor to match the service isolation.
 - Regenerated the Xcode project with `xcodegen generate`.
-- Ran `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test`; all 7 tests passed, including the 3 T03 tests.
-- Updated TODO.md and PLAN.md to mark T03 complete. Next step: rerun verification, inspect the final diff/status, and commit.
-- Reran `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test` with output captured to `/tmp/ratebar-t03-xcodebuild.log`; all 7 tests passed again.
-- Scanned `/tmp/ratebar-t03-xcodebuild.log` for `warning:` and `error:`; no matches were found.
-- Final diff/status inspected. Changes are scoped to T03 client code, URLProtocol-backed tests, generated Xcode project references, task docs, and this progress log.
-- T03 changes staged for commit with a descriptive task-prefixed message.
+- Verified with `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test`: 11 tests passed, including all 4 T04 tests.
+- Marked T04 complete in `TODO.md` and `PLAN.md`.
+- Reran verification with output captured at `/tmp/ratebar-t04-xcodebuild.log`.
+- Scanned the captured log for `warning:` and `error:`; no matches were found.
+- Final changes staged for a `[T04]` commit.

@@ -153,8 +153,8 @@ xcodebuild -scheme RateBar -destination 'platform=macOS' test
 ```
 
 #### Delivery Criteria
-- [ ] 4 测试通过
-- [ ] 0 warning
+- [x] 4 测试通过
+- [x] 0 warning
 
 ---
 
