@@ -63,7 +63,7 @@ Use the Launch at Login toggle to register or unregister RateBar with macOS logi
 brew install --cask haha1903/tap/ratebar
 ```
 
-This installs a notarized, signed `.app` from the [GitHub Releases](https://github.com/haha1903/RateBar/releases). Updates ship via `brew upgrade --cask ratebar`.
+This installs a notarized, signed `.app` from the [GitHub Releases](https://github.com/haha1903/ratebar/releases). Updates ship via `brew upgrade --cask ratebar`.
 
 Uninstall:
 
