@@ -115,7 +115,7 @@ async/await HTTP 客户端，调用 exchangerate.host 拉取 AUD→{CNY,USD,JPY,
 
 #### Verification
 ```
-xcodebuild -scheme RateBar -destination 'platform=macOS' test
+xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test
 ```
 
 #### Delivery Criteria
@@ -300,7 +300,7 @@ Manual verification note: 实际重启验证需在用户机器上安装/运行 A
 本地 release 构建 .app，README 写完整使用说明，打 v0.1.0 tag。
 
 #### Design
-- `xcodebuild -scheme RateBar -configuration Release -derivedDataPath build` 产出 `RateBar.app`
+- `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" -configuration Release -derivedDataPath build build` 产出 `RateBar.app`
 - README 加：
   - 截图（菜单栏 + 下拉）
   - 安装：把 `RateBar.app` 拖到 `/Applications`
@@ -312,16 +312,18 @@ Manual verification note: 实际重启验证需在用户机器上安装/运行 A
 
 #### Verification
 ```
-xcodebuild -scheme RateBar -configuration Release -derivedDataPath build build
+xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" -configuration Release -derivedDataPath build build
 ls build/Build/Products/Release/RateBar.app
-xcodebuild -scheme RateBar -destination 'platform=macOS' test
+xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test
 ```
 
 #### Delivery Criteria
-- [ ] release .app 构建成功
-- [ ] 全部测试通过
-- [ ] README 完整
-- [ ] `v0.1.0` tag 已创建
+- [x] release .app 构建成功
+- [x] 全部测试通过
+- [x] README 完整
+- [x] `v0.1.0` tag 已创建
+
+Verification result: Release build succeeded with `build/Build/Products/Release/RateBar.app`; full XCTest suite passed 25 tests with 0 failures. The `v0.1.0` tag points at the T09 commit.
 
 ---
 

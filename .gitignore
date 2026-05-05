@@ -1,0 +1,7 @@
+# Xcode generated products and result bundles.
+build/
+DerivedData/
+*.xcresult
+
+# macOS Finder metadata.
+.DS_Store

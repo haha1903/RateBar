@@ -27,6 +27,20 @@ xcodegen generate
 xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" build
 ```
 
+## Release Build
+
+Create a local Release build of the `.app` bundle:
+
+```sh
+xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" -configuration Release -derivedDataPath build build
+```
+
+The app bundle is produced at:
+
+```sh
+build/Build/Products/Release/RateBar.app
+```
+
 ## Test
 
 Run the XCTest suite:
@@ -40,3 +54,13 @@ xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test
 Open the generated project and run the `RateBar` scheme from Xcode. The menu bar extra displays `AUD→CNY` as the compact title; opening it shows the four configured AUD exchange-rate pairs, the last successful refresh time, Refresh, Launch at Login, and Quit.
 
 Use the Launch at Login toggle to register or unregister RateBar with macOS login items. A full launch-at-login verification requires running the app on the target Mac, enabling the toggle, and signing out or restarting to confirm the menu bar extra appears automatically.
+
+## Install
+
+Build the Release app, then drag `build/Build/Products/Release/RateBar.app` to `/Applications`. Launch RateBar from `/Applications`; because it is a menu bar utility, it appears in the menu bar rather than the Dock.
+
+## Known Limitations
+
+- The MVP uses the no-key `exchangerate.host` latest-rates endpoint, so data availability and request frequency are subject to that provider's service limits.
+- The base currency is fixed to AUD and the menu exposes only CNY, USD, JPY, and EUR.
+- Launch-at-login behavior must be verified on the target Mac after installing and running the app.

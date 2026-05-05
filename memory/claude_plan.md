@@ -1,37 +1,33 @@
 # Execution Plan
 
-I will follow the project workflow for a single TODO item in this invocation. This file records the actionable plan and progress updates; it intentionally does not include private reasoning details.
+## Scope
 
-## Current Objective
+Complete exactly the first undone task from `TODO.md`, after first checking the latest commit for any mentioned pre-existing issue that must be fixed before task work.
 
-Complete exactly the first undone task in `TODO.md`, after first checking whether the latest commit mentions any pre-existing issue that must be fixed.
+## Step-by-Step Plan
 
-## Steps
+1. Inspect the latest Git commit message and diff summary.
+   - If it mentions a pre-existing issue, investigate and fix that issue before continuing to `TODO.md`.
+   - If no such issue is mentioned, record that result and continue.
+2. Read `TODO.md` and identify the first incomplete task.
+3. Read `PLAN.md` and relevant project files to understand expected implementation details.
+4. If the first incomplete task is too large to complete safely in one invocation, decompose it into smaller subtasks by updating `PLAN.md` and `TODO.md`, commit that planning change, and stop.
+5. Implement the first incomplete task completely.
+6. Add or update tests appropriate to the change.
+7. Run the relevant build and test commands, fixing any failures or warnings introduced by the work.
+8. Update `TODO.md` to mark the completed task done.
+9. Update `PLAN.md` with the current state and any implementation notes.
+10. Commit all changes with a clear, descriptive commit message.
+11. Stop without starting the next task.
 
-1. Inspect the latest commit message and diff for any mentioned pre-existing issue.
-2. If the latest commit identifies a pre-existing issue, fix all such issues before continuing.
-3. Read `TODO.md` and identify the first incomplete task.
-4. If the first task is too large, decompose it into smaller subtasks in `TODO.md` and update `PLAN.md`, then execute only the first new subtask.
-5. Implement the selected task completely.
-6. Run the relevant build and test checks.
-7. Fix any failures or warnings introduced or exposed by the task.
-8. Update `TODO.md` to mark the completed task and update `PLAN.md` with current progress.
-9. Commit the completed work with a clear message.
-10. Stop without starting the next task.
+## Progress Log
 
-## Progress
-
-- Plan recorded before project inspection.
-- Latest commit inspected: `a2b0741 run.sh: drop set -e (was killing loop on benign git/grep non-zero)`.
-- `run.sh` inspected; the referenced issue appears already fixed by removing `set -e` and handling expected non-zero commands explicitly.
-- `TODO.md` and `PLAN.md` read.
-- First incomplete task identified: `T08: 开机自启动`.
-- T08 is small enough to implement directly without decomposing into subtasks.
-- Existing service/UI/test patterns inspected.
-- Added `LaunchAtLogin` service abstraction, system `SMAppService.mainApp` wrapper, menu toggle wiring, localization keys, and T08 unit tests.
-- Regenerated the Xcode project with `xcodegen generate`.
-- Ran `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test`; all 24 tests passed.
-- Updated `TODO.md`, `PLAN.md`, README, and the SVG screenshot documentation for T08.
-- The manual reboot verification is documented as a target-machine step; this agent run did not restart the Mac.
-- Reviewed the final diff and committed T08 as `[T08] Add launch at login toggle`.
-- Stop after this task; do not begin T09.
+- Plan initialized before running repository inspection commands.
+- Latest commit inspected: `f335e30 [T08] Add launch at login toggle`; no pre-existing issue was mentioned in the commit message.
+- `TODO.md` inspected; the first incomplete task is `T09: 打包 + 验收`.
+- T09 implementation approach: add final smoke coverage for release metadata, complete README installation and known-limitations sections, then run Release build and full XCTest validation.
+- Implemented T09 documentation and smoke-test edits: README now includes release build, install, and known-limitations notes; `SmokeTests` now includes `testFinalSmoke`; generated build output is ignored.
+- Full XCTest validation passed: 25 tests, 0 failures. Release build initially succeeded but used Xcode's default destination selection, so the documented command is being tightened to specify the current macOS architecture.
+- Explicit-destination Release build passed and `build/Build/Products/Release/RateBar.app` exists.
+- Marked T09 complete in `TODO.md` and `PLAN.md`.
+- Final repository step: commit the T09 changes and create the `v0.1.0` tag on that commit.

@@ -125,17 +125,19 @@
 
 ---
 
-## [TODO] T09: 打包 + 验收
+## [DONE] T09: 打包 + 验收
 **Dependencies**: T08
 **Goal**: Release 构建 .app，README 完整，打 v0.1.0 tag。
 **Design**: 见 PLAN.md → T09。
 **Test Cases**:
 - `testFinalSmoke` (timeout: 10s) — 全套测试通过
-**Verification**: `xcodebuild -configuration Release build` + `xcodebuild test`
+**Verification**: `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" -configuration Release -derivedDataPath build build` + `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test`
 **Delivery Criteria**:
-- [ ] release .app 构建成功
-- [ ] 全部测试通过
-- [ ] README 含截图与安装说明
-- [ ] `v0.1.0` tag
+- [x] release .app 构建成功
+- [x] 全部测试通过
+- [x] README 含截图与安装说明
+- [x] `v0.1.0` tag
+
+**Verification Result**: `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" -configuration Release -derivedDataPath build build` 成功，`build/Build/Products/Release/RateBar.app` 存在；`xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test` 通过 25 个测试。
 
 ---
