@@ -9,16 +9,23 @@ protocol RateFetching: Sendable {
 enum RateClientError: Error {
     case badStatus(Int)
     case decoding
+    case providerFailure(String)
     case transport(Error)
 }
 
-/// HTTP client for the exchangerate.host latest-rates endpoint.
-struct ExchangeRateHostClient: RateFetching {
+/// HTTP client for the open.er-api.com latest-rates endpoint.
+///
+/// The endpoint returns rates for all supported quote currencies in a single
+/// response keyed off the base currency in the URL path
+/// (e.g. `https://open.er-api.com/v6/latest/AUD`). The optional `symbols`
+/// argument is filtered client-side because the provider does not support a
+/// server-side projection.
+struct OpenERAPIClient: RateFetching {
     private let endpoint: URL
     private let session: URLSession
 
     init(
-        endpoint: URL = URL(string: "https://api.exchangerate.host/latest")!,
+        endpoint: URL = URL(string: "https://open.er-api.com/v6/latest")!,
         session: URLSession = .shared
     ) {
         self.endpoint = endpoint
@@ -26,8 +33,10 @@ struct ExchangeRateHostClient: RateFetching {
     }
 
     /// Fetches a snapshot for the requested base currency and quote symbols.
+    /// `symbols` is used to filter the returned snapshot client-side; pass an
+    /// empty array to keep all rates returned by the provider.
     func fetch(base: String, symbols: [String]) async throws -> RatesSnapshot {
-        let request = URLRequest(url: makeURL(base: base, symbols: symbols))
+        let request = URLRequest(url: makeURL(base: base))
         let data: Data
         let response: URLResponse
 
@@ -45,22 +54,30 @@ struct ExchangeRateHostClient: RateFetching {
             throw RateClientError.badStatus(httpResponse.statusCode)
         }
 
+        let decoded: OpenERAPIResponse
         do {
-            return try JSONDecoder()
-                .decode(ExchangeRateHostResponse.self, from: data)
-                .toSnapshot()
+            decoded = try JSONDecoder().decode(OpenERAPIResponse.self, from: data)
         } catch {
             throw RateClientError.decoding
         }
+
+        guard decoded.result == "success" else {
+            throw RateClientError.providerFailure(decoded.result)
+        }
+
+        let snapshot = decoded.toSnapshot()
+        guard !symbols.isEmpty else { return snapshot }
+
+        let wanted = Set(symbols)
+        let filtered = snapshot.rates.filter { wanted.contains($0.key) }
+        return RatesSnapshot(
+            base: snapshot.base,
+            fetchedAt: snapshot.fetchedAt,
+            rates: filtered
+        )
     }
 
-    private func makeURL(base: String, symbols: [String]) -> URL {
-        var components = URLComponents(url: endpoint, resolvingAgainstBaseURL: false)!
-        components.queryItems = [
-            URLQueryItem(name: "base", value: base),
-            URLQueryItem(name: "symbols", value: symbols.joined(separator: ",")),
-        ]
-
-        return components.url!
+    private func makeURL(base: String) -> URL {
+        endpoint.appendingPathComponent(base.uppercased())
     }
 }

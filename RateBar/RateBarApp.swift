@@ -11,7 +11,7 @@ struct RateBarApp: App {
     private let refreshScheduler: RefreshScheduler
 
     init() {
-        let service = RateService(client: ExchangeRateHostClient())
+        let service = RateService(client: OpenERAPIClient())
         let scheduler = RefreshScheduler(service: service)
         let loginService = LaunchAtLogin()
 

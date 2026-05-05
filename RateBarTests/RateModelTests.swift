@@ -5,8 +5,9 @@ import XCTest
 final class RateModelTests: XCTestCase {
     private static let sampleJSON = """
     {
-      "base": "AUD",
-      "date": "2026-05-05",
+      "result": "success",
+      "base_code": "AUD",
+      "time_last_update_unix": 1777939351,
       "rates": {
         "CNY": 4.72,
         "USD": 0.65,
@@ -20,8 +21,9 @@ final class RateModelTests: XCTestCase {
         let response = try decodeSampleResponse()
         let cnyRate = try XCTUnwrap(response.rates["CNY"])
 
-        XCTAssertEqual(response.base, "AUD")
-        XCTAssertEqual(response.date, "2026-05-05")
+        XCTAssertEqual(response.result, "success")
+        XCTAssertEqual(response.baseCode, "AUD")
+        XCTAssertEqual(try XCTUnwrap(response.timeLastUpdateUnix), 1_777_939_351, accuracy: 0.5)
         XCTAssertEqual(response.rates.count, 4)
         XCTAssertEqual(cnyRate, 4.72, accuracy: 0.000_001)
     }
@@ -40,9 +42,9 @@ final class RateModelTests: XCTestCase {
         XCTAssertEqual(first, second)
     }
 
-    private func decodeSampleResponse() throws -> ExchangeRateHostResponse {
+    private func decodeSampleResponse() throws -> OpenERAPIResponse {
         let data = try XCTUnwrap(Self.sampleJSON.data(using: .utf8))
-        return try JSONDecoder().decode(ExchangeRateHostResponse.self, from: data)
+        return try JSONDecoder().decode(OpenERAPIResponse.self, from: data)
     }
 
     private func makeSnapshot() -> RatesSnapshot {

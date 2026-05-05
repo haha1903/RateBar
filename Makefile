@@ -3,7 +3,7 @@ SCHEME := RateBar
 APP_BUNDLE := $(APP_NAME).app
 
 # Single source of truth for version (must match project.yml MARKETING_VERSION).
-VERSION := 0.1.0
+VERSION := 0.1.1
 
 # Build output (xcodebuild -derivedDataPath build).
 BUILD_DERIVED := build

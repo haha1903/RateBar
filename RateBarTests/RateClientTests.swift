@@ -1,17 +1,19 @@
 @testable import RateBar
 import XCTest
 
-/// Tests for the exchangerate.host HTTP client and its error mapping.
+/// Tests for the open.er-api.com HTTP client and its error mapping.
 final class RateClientTests: XCTestCase {
     private static let sampleJSON = """
     {
-      "base": "AUD",
-      "date": "2026-05-05",
+      "result": "success",
+      "base_code": "AUD",
+      "time_last_update_unix": 1777939351,
       "rates": {
         "CNY": 4.72,
         "USD": 0.65,
         "JPY": 101.34,
-        "EUR": 0.59
+        "EUR": 0.59,
+        "GBP": 0.51
       }
     }
     """
@@ -34,17 +36,48 @@ final class RateClientTests: XCTestCase {
         )
 
         let requestURL = try XCTUnwrap(MockURLProtocol.lastRequest()?.url)
-        let queryItems = try XCTUnwrap(URLComponents(url: requestURL, resolvingAgainstBaseURL: false)?.queryItems)
         let cnyRate = try XCTUnwrap(snapshot.rates["CNY"])
 
         XCTAssertEqual(requestURL.scheme, "https")
-        XCTAssertEqual(requestURL.host, "api.exchangerate.host")
-        XCTAssertEqual(requestURL.path, "/latest")
-        XCTAssertEqual(queryItems.first { $0.name == "base" }?.value, "AUD")
-        XCTAssertEqual(queryItems.first { $0.name == "symbols" }?.value, "CNY,USD,JPY,EUR")
+        XCTAssertEqual(requestURL.host, "open.er-api.com")
+        XCTAssertEqual(requestURL.path, "/v6/latest/AUD")
         XCTAssertEqual(snapshot.base, "AUD")
+        // GBP should be filtered out because it isn't in the requested symbols.
         XCTAssertEqual(snapshot.rates.count, 4)
+        XCTAssertNil(snapshot.rates["GBP"])
         XCTAssertEqual(cnyRate, 4.72, accuracy: 0.000_001)
+    }
+
+    func testFetchKeepsAllRatesWhenSymbolsEmpty() async throws {
+        MockURLProtocol.setHandler { request in
+            let data = try XCTUnwrap(Self.sampleJSON.data(using: .utf8))
+            let response = try Self.makeResponse(statusCode: 200, url: request.url)
+            return (response, data)
+        }
+
+        let snapshot = try await makeClient().fetch(base: "AUD", symbols: [])
+
+        XCTAssertEqual(snapshot.rates.count, 5)
+    }
+
+    func testFetchProviderFailure() async {
+        MockURLProtocol.setHandler { request in
+            let body = """
+            {"result":"error","base_code":"AUD","rates":{}}
+            """
+            let data = try XCTUnwrap(body.data(using: .utf8))
+            let response = try Self.makeResponse(statusCode: 200, url: request.url)
+            return (response, data)
+        }
+
+        do {
+            _ = try await makeClient().fetch(base: "AUD", symbols: ["CNY"])
+            XCTFail("Expected providerFailure error")
+        } catch RateClientError.providerFailure(let result) {
+            XCTAssertEqual(result, "error")
+        } catch {
+            XCTFail("Expected providerFailure error, got \(error)")
+        }
     }
 
     func testFetchHTTP500() async {
@@ -80,11 +113,11 @@ final class RateClientTests: XCTestCase {
         }
     }
 
-    private func makeClient() -> ExchangeRateHostClient {
+    private func makeClient() -> OpenERAPIClient {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [MockURLProtocol.self]
 
-        return ExchangeRateHostClient(session: URLSession(configuration: configuration))
+        return OpenERAPIClient(session: URLSession(configuration: configuration))
     }
 
     private static func makeResponse(statusCode: Int, url: URL?) throws -> HTTPURLResponse {

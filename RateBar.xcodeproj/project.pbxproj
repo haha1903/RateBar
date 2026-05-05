@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		055A6444D0B21C8C1CF5DC22 /* ExchangeRateHostResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20DA40E5CE2B828C55CFD548 /* ExchangeRateHostResponse.swift */; };
 		2AC7467894190B8EA95F030D /* RateClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111305FF5A59387BE4D8503A /* RateClientTests.swift */; };
 		4542ECA7B32BD008515C5A1C /* RateServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E277F7A12B51D1FA69AD70B /* RateServiceTests.swift */; };
 		4C42E7C36987967CF3236856 /* MenuBarLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E7884461C6FF320EEC9A30 /* MenuBarLabel.swift */; };
 		544C8FBA145FF29F246075C2 /* MenuContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B5ED8E8D9D278C7EEF3F6 /* MenuContent.swift */; };
+		551CDEDCADFEC2EF01474789 /* OpenERAPIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6CF000A8ED9265ABDDB9C0 /* OpenERAPIResponse.swift */; };
 		5789DA5E3663F26A11F1A834 /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95DE318862D3D1F5609BA0B /* LaunchAtLogin.swift */; };
 		59CD5B5FCABB2F51862EFBE6 /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD12C561E12004311EFDAE9 /* Rate.swift */; };
 		66CD4FF8C4D1F00DE365812F /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EB90676CB418D98014470ED /* ServiceManagement.framework */; };
@@ -44,10 +44,10 @@
 
 /* Begin PBXFileReference section */
 		029A767550AA364788C44A71 /* SnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStore.swift; sourceTree = "<group>"; };
+		0A6CF000A8ED9265ABDDB9C0 /* OpenERAPIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenERAPIResponse.swift; sourceTree = "<group>"; };
 		0EFC4ECC2B6F0E6176423044 /* MenuContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuContentTests.swift; sourceTree = "<group>"; };
 		111305FF5A59387BE4D8503A /* RateClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateClientTests.swift; sourceTree = "<group>"; };
 		1EB90676CB418D98014470ED /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
-		20DA40E5CE2B828C55CFD548 /* ExchangeRateHostResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateHostResponse.swift; sourceTree = "<group>"; };
 		3E277F7A12B51D1FA69AD70B /* RateServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateServiceTests.swift; sourceTree = "<group>"; };
 		5AD12C561E12004311EFDAE9 /* Rate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rate.swift; sourceTree = "<group>"; };
 		5CE84B403D327752898C7B73 /* RateBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateBarApp.swift; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 		74CAB4850584E4D411FC117B /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				20DA40E5CE2B828C55CFD548 /* ExchangeRateHostResponse.swift */,
+				0A6CF000A8ED9265ABDDB9C0 /* OpenERAPIResponse.swift */,
 				5AD12C561E12004311EFDAE9 /* Rate.swift */,
 			);
 			path = Models;
@@ -287,11 +287,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				055A6444D0B21C8C1CF5DC22 /* ExchangeRateHostResponse.swift in Sources */,
 				5789DA5E3663F26A11F1A834 /* LaunchAtLogin.swift in Sources */,
 				6B8181516FC6D1FF11B2CD53 /* LocalizedStrings.swift in Sources */,
 				4C42E7C36987967CF3236856 /* MenuBarLabel.swift in Sources */,
 				544C8FBA145FF29F246075C2 /* MenuContent.swift in Sources */,
+				551CDEDCADFEC2EF01474789 /* OpenERAPIResponse.swift in Sources */,
 				59CD5B5FCABB2F51862EFBE6 /* Rate.swift in Sources */,
 				8010BAA7B0558FEFF1DC1509 /* RateBarApp.swift in Sources */,
 				9D771BD177A14BA09F8CFEE3 /* RateClient.swift in Sources */,
