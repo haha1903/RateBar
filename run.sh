@@ -1,5 +1,8 @@
 #!/bin/bash
-set -e
+# Note: deliberately NOT using `set -e`. Several commands in this loop
+# (e.g. `git tag | grep -q ...`) legitimately return non-zero, and we don't
+# want the loop to silently abort. Failures are handled explicitly below.
+set -uo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROMPT_FILE="$REPO_DIR/PROMPT.md"
