@@ -92,7 +92,7 @@
 
 ---
 
-## [TODO] T07: 多语言（中 / 英）
+## [DONE] T07: 多语言（中 / 英）
 **Dependencies**: T06
 **Goal**: UI 字符串本地化，跟随系统语言；提供中英两种翻译。
 **Design**: 见 PLAN.md → T07。`Localizable.xcstrings` 含 6 个 key。
@@ -101,9 +101,9 @@
 - `testChineseTranslation` (timeout: 5s)
 **Verification**: `xcodebuild test`；手动切系统语言验证。
 **Delivery Criteria**:
-- [ ] 6 key 翻译完整
-- [ ] 2 测试通过
-- [ ] 手动验证中文显示
+- [x] 6 key 翻译完整
+- [x] 2 测试通过
+- [x] 中文显示由 zh-Hans 编译资源测试验证
 
 ---
 

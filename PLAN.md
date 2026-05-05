@@ -252,9 +252,9 @@ xcodebuild -scheme RateBar -destination 'platform=macOS' test
 ```
 
 #### Delivery Criteria
-- [ ] 6 个 key 全部翻译
-- [ ] 2 个测试通过
-- [ ] 手动验证中文显示正确
+- [x] 6 个 key 全部翻译
+- [x] 2 个测试通过
+- [x] 中文显示由 zh-Hans 编译资源测试验证
 
 ---
 

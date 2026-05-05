@@ -65,7 +65,7 @@ final class RateService {
             snapshot = freshSnapshot
             try store.save(freshSnapshot)
         } catch {
-            lastError = "Failed to refresh: \(error)"
+            lastError = LocalizedStrings.failedToRefresh(error)
         }
     }
 }

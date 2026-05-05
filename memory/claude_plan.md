@@ -1,39 +1,32 @@
-# Claude Plan
+# Current Execution Plan
 
-## Current Invocation Goal
+## Scope
 
-Complete exactly the first undone task from `TODO.md`, after first checking the latest commit for any mentioned pre-existing issue that must be fixed before task work.
+Complete exactly the first undone task from `TODO.md`, after checking the latest commit for any pre-existing issue that must be fixed first.
 
-## Execution Plan
+## Step-by-Step Plan
 
-1. Inspect the latest Git commit message and changed files to identify any referenced pre-existing issue or follow-up fix.
-2. If the latest commit reveals a concrete issue, inspect the affected code, implement the fix, run focused tests, and commit that fix before continuing.
-3. Read `TODO.md` and identify the first incomplete task.
-4. Read `PLAN.md` and nearby project files needed to understand the selected task.
-5. If the selected task is too large for one invocation, update `PLAN.md` and `TODO.md` with smaller subtasks, commit that planning change, and stop.
-6. Implement the selected task with scoped changes that follow existing project patterns.
-7. Run relevant tests and builds for the changed behavior, fixing any failures or warnings introduced by the work.
-8. Mark the completed task in `TODO.md` and update `PLAN.md` with the completed state.
-9. Commit all intended changes with a descriptive commit message.
-10. Stop without starting the next task.
+1. Inspect the latest Git commit message and diff for any mentioned issue or incomplete fix.
+2. Read `TODO.md` to find the first incomplete task.
+3. Read `PLAN.md` and relevant project files to understand the current intended design and constraints.
+4. If the first incomplete task is too broad, decompose it into smaller subtasks in `TODO.md` and reflect that in `PLAN.md`, then complete only the first new subtask.
+5. Implement the selected task with changes scoped to the existing project style.
+6. Run the relevant tests and build checks, fixing any failures or warnings that are in scope.
+7. Update `TODO.md` to mark only the completed task as done and update `PLAN.md` with current status.
+8. Commit the completed task with a clear descriptive message.
+9. Stop without starting the next TODO task.
 
-## Progress Log
+## Progress
 
-- Plan file initialized before project inspection.
-- Latest commit inspected: `[T05] Add menu bar UI`. No pre-existing issue was mentioned in the commit message.
-- `TODO.md` inspected. The first incomplete task is `T06: 自动 + 手动刷新`.
-- Next step: inspect the app entry point, `RateService`, existing menu UI, project configuration, and related tests before implementing `RefreshScheduler`.
-- Inspection complete. `RateService.refresh()` already exposes `isLoading`, and `RefreshButton` already renders `"Refreshing..."` while disabled.
-- Implementation approach: add `RateBar/Services/RefreshScheduler.swift` with a cancellable async loop, start it from `RateBarApp.init()`, guard duplicate refreshes in `RateService`, and add focused scheduler tests plus a loading-title assertion.
-- Code updated: scheduler added, app startup starts it, duplicate refresh calls now return while loading, and tests were added for immediate refresh, stop behavior, interval refresh, and loading button title.
-- Next step: regenerate the Xcode project and run the XCTest suite; fix any compile or test failures before marking T06 done.
-- First test run failed during compilation because async helper methods in `RefreshSchedulerTests` sent XCTest instance state across actor isolation.
-- Fix applied: scheduler test helpers are now static, avoiding transfer of `self` from `@MainActor` tests.
-- Second test run passed 18 tests but emitted one Swift concurrency warning in `MenuContentTests`.
-- Fix applied: `testRefreshButtonShowsLoadingState` is now `@MainActor` like the existing refresh-button test.
-- Diff review found that `RateBarApp.init()` would also run during XCTest host launches, potentially starting a real production network refresh while tests run.
-- Fix applied: scheduler startup is skipped when `XCTestConfigurationFilePath` is present, and scheduler tests now clean up their temporary UserDefaults suites.
-- Verification complete: `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test` passed 18 tests with no visible compiler warnings.
-- Documentation updated: `TODO.md` marks T06 done and `PLAN.md` now reflects the async-loop scheduler, duplicate-refresh guard, XCTest startup guard, and loading-state test coverage.
-- Next step: inspect final diff/status, stage the intended changes, commit T06, and stop.
-- Final diff/status inspected. Intended files are the T06 implementation, tests, regenerated Xcode project, task docs, and this progress log.
+- Plan file created before repository inspection.
+- `TODO.md` inspected; the first incomplete task is T07 localization.
+- Latest commit inspected: `[T06] Add automatic refresh scheduler`; no explicit pre-existing issue was mentioned in the commit message or changed-file summary.
+- Next step: run generation/tests to catch any current regression before implementing T07.
+- Baseline `xcodegen generate` and `xcodebuild ... test` passed with 18 tests before T07 edits.
+- T07 implementation plan: add `Localizable.xcstrings`, introduce a small localized string helper for the six planned keys, update menu/service strings to use it, and add localization tests for key coverage plus `zh-Hans` translation.
+- T07 code edits made: added the string catalog and localization tests, then replaced menu/service display text with localized helper calls.
+- Next step: validate catalog syntax, regenerate the Xcode project, and run the test suite.
+- Validation passed: `jq empty RateBar/Localizable.xcstrings`, `xcodegen generate`, and `xcodebuild ... test` succeeded with 20 tests.
+- Next step: mark T07 complete in planning documents, review the diff, then commit and stop.
+- Planning documents updated to mark T07 done; final diff and whitespace check passed.
+- Next step: stage the intended files, commit `[T07] Add English and Chinese localization`, then stop.

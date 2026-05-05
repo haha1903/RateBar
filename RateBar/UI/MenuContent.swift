@@ -38,7 +38,7 @@ struct MenuContent: View {
             Divider()
 
             if model.isStale {
-                Label("Stale data", systemImage: "exclamationmark.triangle.fill")
+                Label(LocalizedStrings.staleData, systemImage: "exclamationmark.triangle.fill")
                     .font(.caption)
                     .foregroundStyle(.orange)
             }
@@ -59,7 +59,7 @@ struct MenuContent: View {
             RefreshButton(isLoading: isLoading, action: refreshAction)
 
             Button(action: quitAction) {
-                Label("Quit", systemImage: "power")
+                Label(LocalizedStrings.quit, systemImage: "power")
             }
         }
         .padding(.vertical, 6)
@@ -103,9 +103,9 @@ struct MenuContentModel: Equatable, Sendable {
         }
 
         if let fetchedAt = snapshot?.fetchedAt {
-            self.lastUpdatedText = "Last updated: \(RateDisplayFormatter.timeString(fetchedAt))"
+            self.lastUpdatedText = LocalizedStrings.lastUpdated(RateDisplayFormatter.timeString(fetchedAt))
         } else {
-            self.lastUpdatedText = "Last updated: Never"
+            self.lastUpdatedText = LocalizedStrings.lastUpdated("--")
         }
 
         self.lastErrorText = lastError?.isEmpty == false ? lastError : nil
@@ -119,7 +119,7 @@ struct RefreshButton: View {
     let action: @MainActor () -> Void
 
     var title: String {
-        isLoading ? "Refreshing..." : "Refresh"
+        isLoading ? LocalizedStrings.refreshing : LocalizedStrings.refresh
     }
 
     var body: some View {

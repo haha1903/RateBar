@@ -26,14 +26,14 @@ final class MenuContentTests: XCTestCase {
         button.action()
 
         XCTAssertEqual(spy.refreshCount, 1)
-        XCTAssertEqual(button.title, "Refresh")
+        XCTAssertEqual(button.title, LocalizedStrings.refresh)
     }
 
     @MainActor
     func testRefreshButtonShowsLoadingState() {
         let button = RefreshButton(isLoading: true, action: {})
 
-        XCTAssertEqual(button.title, "Refreshing...")
+        XCTAssertEqual(button.title, LocalizedStrings.refreshing)
     }
 
     private static func makeSnapshot(
