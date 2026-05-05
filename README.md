@@ -57,6 +57,24 @@ Use the Launch at Login toggle to register or unregister RateBar with macOS logi
 
 ## Install
 
+### Homebrew (recommended)
+
+```sh
+brew tap haha1903/voiceinput
+brew install --cask ratebar
+```
+
+This installs a notarized, signed `.app` from the [GitHub Releases](https://github.com/haha1903/RateBar/releases). Updates ship via `brew upgrade --cask ratebar`.
+
+Uninstall:
+
+```sh
+brew uninstall --cask ratebar          # keep preferences
+brew uninstall --cask --zap ratebar     # also wipe preferences
+```
+
+### Manual
+
 Build the Release app, then drag `build/Build/Products/Release/RateBar.app` to `/Applications`. Launch RateBar from `/Applications`; because it is a menu bar utility, it appears in the menu bar rather than the Dock.
 
 ## Known Limitations
