@@ -3,7 +3,8 @@ SCHEME := RateBar
 APP_BUNDLE := $(APP_NAME).app
 
 # Single source of truth for version (must match project.yml MARKETING_VERSION).
-VERSION := 0.1.1
+# CI overrides this from the pushed tag (e.g. `make release VERSION=0.1.2`).
+VERSION := 0.1.2
 
 # Build output (xcodebuild -derivedDataPath build).
 BUILD_DERIVED := build
@@ -11,19 +12,13 @@ BUILD_PRODUCT_DIR := $(BUILD_DERIVED)/Build/Products/Release
 BUILT_APP := $(BUILD_PRODUCT_DIR)/$(APP_BUNDLE)
 
 # Distribution signing identity (Developer ID Application).
-# Override in Makefile.local if you want a different one.
+# Override in Makefile.local (or via env in CI) if needed.
 RELEASE_SIGN_ID ?= Developer ID Application: Hai Chang (5B858997A3)
 DEVELOPMENT_TEAM ?= 5B858997A3
 
 # Notarization keychain profile (created via `xcrun notarytool store-credentials`).
+# CI creates this profile in a temporary keychain on the runner.
 NOTARY_PROFILE ?= RateBar-Notary
-
-# GitHub repo for releases (used by `make publish`).
-RELEASE_REPO ?= haha1903/RateBar
-
-# Homebrew tap repo (local clone or remote URL handled in scripts/update-cask.sh).
-TAP_REPO ?= haha1903/homebrew-voiceinput
-CASK_NAME ?= ratebar
 
 # Release artifact paths.
 DIST_DIR := dist
@@ -31,7 +26,7 @@ RELEASE_ZIP := $(DIST_DIR)/$(APP_NAME)-$(VERSION).zip
 
 -include Makefile.local
 
-.PHONY: gen build clean run release-build notarize release-zip release verify-release publish bump-cask dist-clean
+.PHONY: gen build clean run release-build notarize release-zip release verify-release dist-clean
 
 # --- Dev build (ad-hoc) ----------------------------------------------------
 
@@ -46,13 +41,17 @@ build: gen
 	  -derivedDataPath $(BUILD_DERIVED) \
 	  build
 
-run: release-build-only
-	open $(BUILT_APP)
+run: build
+	open $(BUILD_DERIVED)/Build/Products/Debug/$(APP_BUNDLE)
 
 clean:
 	rm -rf $(BUILD_DERIVED) $(DIST_DIR)
 
 # --- Release pipeline ------------------------------------------------------
+#
+# Releases are produced by .github/workflows/release.yml on tag push.
+# Targets below are also runnable locally for diagnosing build/sign/notarize
+# issues, but the canonical artifacts come from CI.
 
 # Build Release with Developer ID signing + hardened runtime + secure timestamp.
 # Overrides project.yml's ad-hoc CODE_SIGN_IDENTITY="-".
@@ -107,32 +106,12 @@ verify-release:
 	xcrun stapler validate $(BUILT_APP)
 	@echo "✅ All verification checks passed"
 
-# One-shot: build + notarize + zip + verify.
+# One-shot: build + notarize + zip + verify. CI calls this with VERSION=<tag>.
 release: release-zip verify-release
 	@echo ""
 	@echo "🚀 Release artifact ready: $(RELEASE_ZIP)"
-	@echo "Next steps:"
-	@echo "  make publish           # tag + gh release create + bump cask"
-
-# Tag, push, create GitHub Release with the zip, bump cask in tap repo.
-publish:
-	@if [ ! -f $(RELEASE_ZIP) ]; then echo "❌ $(RELEASE_ZIP) missing. Run: make release"; exit 1; fi
-	@if ! git diff-index --quiet HEAD --; then echo "❌ working tree dirty, commit first"; exit 1; fi
-	@echo "🏷  Tagging v$(VERSION)..."
-	git tag -a v$(VERSION) -m "Release v$(VERSION)" || true
-	git push origin v$(VERSION)
-	@echo "📤 Creating GitHub release on $(RELEASE_REPO)..."
-	gh release create v$(VERSION) $(RELEASE_ZIP) \
-	  --repo $(RELEASE_REPO) \
-	  --title "v$(VERSION)" \
-	  --generate-notes
-	@$(MAKE) bump-cask
-
-# Update the cask in the tap repo with new version + sha256.
-bump-cask:
-	@SHA=$$(shasum -a 256 $(RELEASE_ZIP) | awk '{print $$1}'); \
-	  echo "🍺 Bumping cask $(CASK_NAME) → $(VERSION) (sha256 $$SHA)"; \
-	  bash scripts/update-cask.sh "$(TAP_REPO)" "$(CASK_NAME)" "$(VERSION)" "$$SHA"
+	@echo "GitHub release + cask bump are handled by .github/workflows/release.yml."
+	@echo "To publish: bump VERSION here + project.yml, commit, then push a v\$$(VERSION) tag."
 
 dist-clean:
 	rm -rf $(DIST_DIR)
