@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		055A6444D0B21C8C1CF5DC22 /* ExchangeRateHostResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20DA40E5CE2B828C55CFD548 /* ExchangeRateHostResponse.swift */; };
+		59CD5B5FCABB2F51862EFBE6 /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD12C561E12004311EFDAE9 /* Rate.swift */; };
+		7434DA2E3CDB2A43556195F5 /* RateModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B85D13EEB6B14A58452D6B6D /* RateModelTests.swift */; };
 		78A9BB7002718701CA7399F8 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D9A785A8E5BBCAF0E52084 /* AppIntents.framework */; };
 		8010BAA7B0558FEFF1DC1509 /* RateBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CE84B403D327752898C7B73 /* RateBarApp.swift */; };
 		947A93BEDA3FDFB25473D541 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D9A785A8E5BBCAF0E52084 /* AppIntents.framework */; };
@@ -24,10 +27,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		20DA40E5CE2B828C55CFD548 /* ExchangeRateHostResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateHostResponse.swift; sourceTree = "<group>"; };
+		5AD12C561E12004311EFDAE9 /* Rate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rate.swift; sourceTree = "<group>"; };
 		5CE84B403D327752898C7B73 /* RateBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateBarApp.swift; sourceTree = "<group>"; };
 		6081752493D2AF9ADE1CB59E /* SmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
 		969F0864FDEC125B337EAB28 /* RateBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RateBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0D9A785A8E5BBCAF0E52084 /* AppIntents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppIntents.framework; path = System/Library/Frameworks/AppIntents.framework; sourceTree = SDKROOT; };
+		B85D13EEB6B14A58452D6B6D /* RateModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateModelTests.swift; sourceTree = "<group>"; };
 		D5AD2B6940D05C9ABF1C6B1A /* RateBarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RateBarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -54,9 +60,19 @@
 		0B760741C9B1257CFCF84A89 /* RateBarTests */ = {
 			isa = PBXGroup;
 			children = (
+				B85D13EEB6B14A58452D6B6D /* RateModelTests.swift */,
 				6081752493D2AF9ADE1CB59E /* SmokeTests.swift */,
 			);
 			path = RateBarTests;
+			sourceTree = "<group>";
+		};
+		74CAB4850584E4D411FC117B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				20DA40E5CE2B828C55CFD548 /* ExchangeRateHostResponse.swift */,
+				5AD12C561E12004311EFDAE9 /* Rate.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		7DE3C7F526733D8DBF2AB18D /* Frameworks */ = {
@@ -90,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				5CE84B403D327752898C7B73 /* RateBarApp.swift */,
+				74CAB4850584E4D411FC117B /* Models */,
 			);
 			path = RateBar;
 			sourceTree = "<group>";
@@ -176,6 +193,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				055A6444D0B21C8C1CF5DC22 /* ExchangeRateHostResponse.swift in Sources */,
+				59CD5B5FCABB2F51862EFBE6 /* Rate.swift in Sources */,
 				8010BAA7B0558FEFF1DC1509 /* RateBarApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -184,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7434DA2E3CDB2A43556195F5 /* RateModelTests.swift in Sources */,
 				9BD1F284C60A294428EF4AB8 /* SmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

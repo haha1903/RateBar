@@ -15,7 +15,7 @@
 
 ---
 
-## [TODO] T02: 汇率数据模型
+## [DONE] T02: 汇率数据模型
 **Dependencies**: T01
 **Goal**: 定义 `Rate` / `RatesSnapshot` / `ExchangeRateHostResponse` 数据结构 + 解码。
 **Design**: 见 PLAN.md → T02。`RateBar/Models/` 下两个文件。
@@ -23,10 +23,10 @@
 - `testDecodeResponse` (timeout: 5s)
 - `testRateLookup` (timeout: 5s)
 - `testEquatable` (timeout: 5s)
-**Verification**: `xcodebuild test`
+**Verification**: `xcodegen generate && xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" clean test`
 **Delivery Criteria**:
-- [ ] 3 测试通过
-- [ ] 0 warning
+- [x] 3 测试通过
+- [x] 0 warning
 
 ---
 

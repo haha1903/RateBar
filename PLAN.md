@@ -74,7 +74,7 @@ xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test
   - `extension RatesSnapshot { func rate(to quote: String) -> Rate? }`
 - `RateBar/Models/ExchangeRateHostResponse.swift`
   - `struct ExchangeRateHostResponse: Decodable { let base: String; let date: String; let rates: [String: Double] }`
-  - `func toSnapshot() -> RatesSnapshot`
+  - `func toSnapshot(fetchedAt: Date = Date()) -> RatesSnapshot`
 
 #### Test Cases
 - `testDecodeResponse` (timeout: 5s) — 用固定 JSON 串解码 → base="AUD"、rates 含 4 个 key
@@ -83,12 +83,13 @@ xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test
 
 #### Verification
 ```
-xcodebuild -scheme RateBar -destination 'platform=macOS' test
+xcodegen generate
+xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" clean test
 ```
 
 #### Delivery Criteria
-- [ ] 3 个测试通过
-- [ ] 无 warning
+- [x] 3 个测试通过
+- [x] 无 warning
 
 ---
 
