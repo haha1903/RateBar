@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftUI
 
 /// Main application entry point for the RateBar menu bar utility.
