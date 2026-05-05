@@ -119,8 +119,8 @@ xcodebuild -scheme RateBar -destination 'platform=macOS' test
 ```
 
 #### Delivery Criteria
-- [ ] 3 个测试通过
-- [ ] mock 用 `URLProtocol` 实现，不打真网络
+- [x] 3 个测试通过
+- [x] mock 用 `URLProtocol` 实现，不打真网络
 
 ---
 

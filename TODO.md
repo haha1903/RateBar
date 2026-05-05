@@ -30,7 +30,7 @@
 
 ---
 
-## [TODO] T03: ExchangeRateHost 客户端
+## [DONE] T03: ExchangeRateHost 客户端
 **Dependencies**: T02
 **Goal**: async/await 调用 `https://api.exchangerate.host/latest`，返回 `RatesSnapshot`，错误用 `RateClientError`。
 **Design**: 见 PLAN.md → T03。`RateBar/Network/RateClient.swift` + `URLProtocol` mock。
@@ -40,8 +40,8 @@
 - `testFetchBadJSON` (timeout: 5s)
 **Verification**: `xcodebuild test`
 **Delivery Criteria**:
-- [ ] 3 测试通过
-- [ ] 不打真网络
+- [x] 3 测试通过
+- [x] 不打真网络
 
 ---
 
