@@ -60,12 +60,12 @@ end
 EOF
 fi
 
-if git diff --quiet; then
+git add "$CASK_FILE"
+if git diff --cached --quiet; then
   echo "ℹ️  No cask changes — already at v${VERSION}."
   exit 0
 fi
 
-git add "$CASK_FILE"
 git -c user.email="cask-bot@local" -c user.name="cask-bot" \
   commit -m "${CASK_NAME}: v${VERSION}"
 git push origin HEAD
