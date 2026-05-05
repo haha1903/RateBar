@@ -5,7 +5,10 @@ import SwiftUI
 struct MenuContent: View {
     let model: MenuContentModel
     let isLoading: Bool
+    let isLaunchAtLoginEnabled: Bool
+    let launchAtLoginError: String?
     let refreshAction: @MainActor () -> Void
+    let setLaunchAtLoginEnabled: @MainActor (Bool) -> Void
     let quitAction: @MainActor () -> Void
 
     init(
@@ -13,12 +16,18 @@ struct MenuContent: View {
         lastError: String?,
         isStale: Bool,
         isLoading: Bool,
+        isLaunchAtLoginEnabled: Bool = false,
+        launchAtLoginError: String? = nil,
         refreshAction: @escaping @MainActor () -> Void,
+        setLaunchAtLoginEnabled: @escaping @MainActor (Bool) -> Void = { _ in },
         quitAction: @escaping @MainActor () -> Void = { NSApplication.shared.terminate(nil) }
     ) {
         self.model = MenuContentModel(snapshot: snapshot, lastError: lastError, isStale: isStale)
         self.isLoading = isLoading
+        self.isLaunchAtLoginEnabled = isLaunchAtLoginEnabled
+        self.launchAtLoginError = launchAtLoginError
         self.refreshAction = refreshAction
+        self.setLaunchAtLoginEnabled = setLaunchAtLoginEnabled
         self.quitAction = quitAction
     }
 
@@ -57,6 +66,18 @@ struct MenuContent: View {
             Divider()
 
             RefreshButton(isLoading: isLoading, action: refreshAction)
+
+            LaunchAtLoginToggle(
+                isEnabled: isLaunchAtLoginEnabled,
+                setEnabled: setLaunchAtLoginEnabled
+            )
+
+            if let launchAtLoginError, !launchAtLoginError.isEmpty {
+                Text(launchAtLoginError)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .lineLimit(2)
+            }
 
             Button(action: quitAction) {
                 Label(LocalizedStrings.quit, systemImage: "power")
@@ -127,5 +148,30 @@ struct RefreshButton: View {
             Label(title, systemImage: "arrow.clockwise")
         }
         .disabled(isLoading)
+    }
+}
+
+/// Launch-at-login menu control shared by the dropdown and tests.
+struct LaunchAtLoginToggle: View {
+    let isEnabled: Bool
+    let setEnabled: @MainActor (Bool) -> Void
+
+    var title: String {
+        LocalizedStrings.launchAtLogin
+    }
+
+    var body: some View {
+        Toggle(
+            isOn: Binding(
+                get: {
+                    isEnabled
+                },
+                set: { newValue in
+                    setEnabled(newValue)
+                }
+            )
+        ) {
+            Label(title, systemImage: "power.circle")
+        }
     }
 }

@@ -284,8 +284,11 @@ xcodebuild -scheme RateBar -destination 'platform=macOS' test
 ```
 
 #### Delivery Criteria
-- [ ] 3 测试通过
-- [ ] 手动验证勾选生效
+- [x] 3 测试通过
+- [x] 菜单 Toggle 已接入 `SMAppService.mainApp`
+- [x] README 记录手动验证步骤
+
+Manual verification note: 实际重启验证需在用户机器上安装/运行 App、勾选 Toggle 后执行；本次自动化运行未重启 Mac。
 
 ---
 

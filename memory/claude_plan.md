@@ -1,32 +1,37 @@
-# Current Execution Plan
+# Execution Plan
 
-## Scope
+I will follow the project workflow for a single TODO item in this invocation. This file records the actionable plan and progress updates; it intentionally does not include private reasoning details.
 
-Complete exactly the first undone task from `TODO.md`, after checking the latest commit for any pre-existing issue that must be fixed first.
+## Current Objective
 
-## Step-by-Step Plan
+Complete exactly the first undone task in `TODO.md`, after first checking whether the latest commit mentions any pre-existing issue that must be fixed.
 
-1. Inspect the latest Git commit message and diff for any mentioned issue or incomplete fix.
-2. Read `TODO.md` to find the first incomplete task.
-3. Read `PLAN.md` and relevant project files to understand the current intended design and constraints.
-4. If the first incomplete task is too broad, decompose it into smaller subtasks in `TODO.md` and reflect that in `PLAN.md`, then complete only the first new subtask.
-5. Implement the selected task with changes scoped to the existing project style.
-6. Run the relevant tests and build checks, fixing any failures or warnings that are in scope.
-7. Update `TODO.md` to mark only the completed task as done and update `PLAN.md` with current status.
-8. Commit the completed task with a clear descriptive message.
-9. Stop without starting the next TODO task.
+## Steps
+
+1. Inspect the latest commit message and diff for any mentioned pre-existing issue.
+2. If the latest commit identifies a pre-existing issue, fix all such issues before continuing.
+3. Read `TODO.md` and identify the first incomplete task.
+4. If the first task is too large, decompose it into smaller subtasks in `TODO.md` and update `PLAN.md`, then execute only the first new subtask.
+5. Implement the selected task completely.
+6. Run the relevant build and test checks.
+7. Fix any failures or warnings introduced or exposed by the task.
+8. Update `TODO.md` to mark the completed task and update `PLAN.md` with current progress.
+9. Commit the completed work with a clear message.
+10. Stop without starting the next task.
 
 ## Progress
 
-- Plan file created before repository inspection.
-- `TODO.md` inspected; the first incomplete task is T07 localization.
-- Latest commit inspected: `[T06] Add automatic refresh scheduler`; no explicit pre-existing issue was mentioned in the commit message or changed-file summary.
-- Next step: run generation/tests to catch any current regression before implementing T07.
-- Baseline `xcodegen generate` and `xcodebuild ... test` passed with 18 tests before T07 edits.
-- T07 implementation plan: add `Localizable.xcstrings`, introduce a small localized string helper for the six planned keys, update menu/service strings to use it, and add localization tests for key coverage plus `zh-Hans` translation.
-- T07 code edits made: added the string catalog and localization tests, then replaced menu/service display text with localized helper calls.
-- Next step: validate catalog syntax, regenerate the Xcode project, and run the test suite.
-- Validation passed: `jq empty RateBar/Localizable.xcstrings`, `xcodegen generate`, and `xcodebuild ... test` succeeded with 20 tests.
-- Next step: mark T07 complete in planning documents, review the diff, then commit and stop.
-- Planning documents updated to mark T07 done; final diff and whitespace check passed.
-- Next step: stage the intended files, commit `[T07] Add English and Chinese localization`, then stop.
+- Plan recorded before project inspection.
+- Latest commit inspected: `a2b0741 run.sh: drop set -e (was killing loop on benign git/grep non-zero)`.
+- `run.sh` inspected; the referenced issue appears already fixed by removing `set -e` and handling expected non-zero commands explicitly.
+- `TODO.md` and `PLAN.md` read.
+- First incomplete task identified: `T08: 开机自启动`.
+- T08 is small enough to implement directly without decomposing into subtasks.
+- Existing service/UI/test patterns inspected.
+- Added `LaunchAtLogin` service abstraction, system `SMAppService.mainApp` wrapper, menu toggle wiring, localization keys, and T08 unit tests.
+- Regenerated the Xcode project with `xcodegen generate`.
+- Ran `xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test`; all 24 tests passed.
+- Updated `TODO.md`, `PLAN.md`, README, and the SVG screenshot documentation for T08.
+- The manual reboot verification is documented as a target-machine step; this agent run did not restart the Mac.
+- Reviewed the final diff and committed T08 as `[T08] Add launch at login toggle`.
+- Stop after this task; do not begin T09.

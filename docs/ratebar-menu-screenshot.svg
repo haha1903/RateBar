@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460" role="img" aria-labelledby="title desc">
   <title id="title">RateBar menu screenshot</title>
-  <desc id="desc">A macOS menu bar extra showing AUD to CNY in the menu bar and AUD exchange rates for CNY, USD, JPY, and EUR in the dropdown.</desc>
+  <desc id="desc">A macOS menu bar extra showing AUD to CNY in the menu bar, AUD exchange rates for CNY, USD, JPY, and EUR, and a launch-at-login toggle in the dropdown.</desc>
   <rect width="760" height="460" fill="#f4f5f7"/>
   <rect x="0" y="0" width="760" height="32" fill="#eceff3"/>
   <text x="24" y="21" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="13" fill="#20242a">Finder</text>
   <text x="550" y="21" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="13" fill="#20242a">$ AUD→CNY: 4.72</text>
-  <rect x="520" y="44" width="212" height="244" rx="9" fill="#ffffff" stroke="#c7ccd4"/>
+  <rect x="520" y="44" width="212" height="270" rx="9" fill="#ffffff" stroke="#c7ccd4"/>
   <g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="14" fill="#1f2933">
     <text x="542" y="78">AUD→CNY</text>
     <text x="675" y="78" text-anchor="end">4.72</text>
@@ -21,8 +21,9 @@
   <line x1="536" y1="238" x2="716" y2="238" stroke="#d9dde4"/>
   <g font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="14" fill="#1f2933">
     <text x="542" y="263">↻ Refresh</text>
-    <text x="542" y="286">⏻ Quit</text>
+    <text x="542" y="286">☑ Launch at Login</text>
+    <text x="542" y="309">⏻ Quit</text>
   </g>
   <rect x="32" y="348" width="696" height="60" rx="8" fill="#ffffff" stroke="#d7dbe2"/>
-  <text x="56" y="383" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="15" fill="#333b46">T05 UI: menu bar rate label, four dropdown rates, last update time, refresh, and quit controls.</text>
+  <text x="56" y="383" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="15" fill="#333b46">Menu UI: rate label, four dropdown rates, last update time, refresh, launch-at-login, and quit controls.</text>
 </svg>

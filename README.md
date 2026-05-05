@@ -4,7 +4,7 @@ RateBar is a macOS menu bar exchange-rate utility. The MVP shows AUD to CNY in t
 
 ## Screenshot
 
-![RateBar menu showing AUD exchange rates and refresh controls](docs/ratebar-menu-screenshot.svg)
+![RateBar menu showing AUD exchange rates, refresh controls, and launch-at-login toggle](docs/ratebar-menu-screenshot.svg)
 
 ## Requirements
 
@@ -37,4 +37,6 @@ xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test
 
 ## Run
 
-Open the generated project and run the `RateBar` scheme from Xcode. The menu bar extra displays `AUD→CNY` as the compact title; opening it shows the four configured AUD exchange-rate pairs, the last successful refresh time, Refresh, and Quit.
+Open the generated project and run the `RateBar` scheme from Xcode. The menu bar extra displays `AUD→CNY` as the compact title; opening it shows the four configured AUD exchange-rate pairs, the last successful refresh time, Refresh, Launch at Login, and Quit.
+
+Use the Launch at Login toggle to register or unregister RateBar with macOS login items. A full launch-at-login verification requires running the app on the target Mac, enabling the toggle, and signing out or restarting to confirm the menu bar extra appears automatically.

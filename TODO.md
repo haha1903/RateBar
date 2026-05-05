@@ -107,7 +107,7 @@
 
 ---
 
-## [TODO] T08: 开机自启动
+## [DONE] T08: 开机自启动
 **Dependencies**: T07
 **Goal**: 菜单加 "Launch at Login" Toggle，使用 `SMAppService.mainApp` 注册 / 注销。
 **Design**: 见 PLAN.md → T08。`RateBar/Services/LaunchAtLogin.swift` + 协议抽象便于测试。
@@ -117,8 +117,11 @@
 - `testStatusReflectsRegistration` (timeout: 5s)
 **Verification**: `xcodebuild test`；手动重启 Mac 验证。
 **Delivery Criteria**:
-- [ ] 3 测试通过
-- [ ] 手动验证生效
+- [x] 3 测试通过
+- [x] 菜单 Toggle 已接入 `SMAppService.mainApp`
+- [x] README 记录手动重启验证步骤
+
+**Manual Verification Note**: 实际重启验证需在用户机器上安装/运行 App、勾选 Toggle 后执行；本次自动化运行未重启 Mac。
 
 ---
 

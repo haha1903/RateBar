@@ -7,13 +7,16 @@ import SwiftUI
 @MainActor
 struct RateBarApp: App {
     @State private var rateService: RateService
+    @State private var launchAtLogin: LaunchAtLogin
     private let refreshScheduler: RefreshScheduler
 
     init() {
         let service = RateService(client: ExchangeRateHostClient())
         let scheduler = RefreshScheduler(service: service)
+        let loginService = LaunchAtLogin()
 
         _rateService = State(initialValue: service)
+        _launchAtLogin = State(initialValue: loginService)
         refreshScheduler = scheduler
 
         if !ProcessInfo.processInfo.isRunningUnitTests {
@@ -28,10 +31,15 @@ struct RateBarApp: App {
                 lastError: rateService.lastError,
                 isStale: rateService.isStale,
                 isLoading: rateService.isLoading,
+                isLaunchAtLoginEnabled: launchAtLogin.isEnabled,
+                launchAtLoginError: launchAtLogin.lastError,
                 refreshAction: {
                     Task { @MainActor in
                         await rateService.refresh()
                     }
+                },
+                setLaunchAtLoginEnabled: { isEnabled in
+                    launchAtLogin.isEnabled = isEnabled
                 },
                 quitAction: {
                     NSApplication.shared.terminate(nil)
