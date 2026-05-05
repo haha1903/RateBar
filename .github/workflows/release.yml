@@ -1,0 +1,177 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 0.1.2). Leave empty to dry-run with the Makefile default.'
+        required: false
+        default: ''
+
+jobs:
+  release:
+    runs-on: macos-14
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          elif [[ -n "${{ github.event.inputs.version }}" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="$(grep '^VERSION :=' Makefile | awk '{print $3}')"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $VERSION"
+
+      - name: Select Xcode
+        run: |
+          # Pick the latest installed Xcode (project.yml requires Swift 6 / macOS 26 SDK).
+          LATEST_XCODE=$(ls -d /Applications/Xcode_*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$LATEST_XCODE" ]; then
+            LATEST_XCODE=/Applications/Xcode.app
+          fi
+          echo "Using $LATEST_XCODE"
+          sudo xcode-select -s "$LATEST_XCODE"
+          xcodebuild -version
+          swift --version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Import Developer ID certificate
+        env:
+          MACOS_CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
+          MACOS_CERT_PASSWORD: ${{ secrets.MACOS_CERT_PASSWORD }}
+          MACOS_KEYCHAIN_PASSWORD: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
+        run: |
+          set -euo pipefail
+          KEYCHAIN_PATH="$RUNNER_TEMP/build.keychain"
+          CERT_PATH="$RUNNER_TEMP/cert.p12"
+
+          echo "$MACOS_CERT_P12_BASE64" | base64 --decode > "$CERT_PATH"
+
+          security create-keychain -p "$MACOS_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$MACOS_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          # Add temp keychain to user search list (keep existing keychains too).
+          security list-keychains -d user -s "$KEYCHAIN_PATH" \
+            $(security list-keychains -d user | tr -d '"')
+
+          security import "$CERT_PATH" \
+            -k "$KEYCHAIN_PATH" \
+            -P "$MACOS_CERT_PASSWORD" \
+            -T /usr/bin/codesign \
+            -T /usr/bin/security
+
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$MACOS_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+
+          rm -f "$CERT_PATH"
+
+      - name: Store notarytool credentials
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          xcrun notarytool store-credentials "RateBar-Notary" \
+            --apple-id "$APPLE_ID" \
+            --team-id "$APPLE_TEAM_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD"
+
+      - name: Build, notarize, staple, and zip
+        run: |
+          # Override VERSION on the make command line so dist/RateBar-<VERSION>.zip
+          # matches the tag we are releasing.
+          make release VERSION="${{ steps.version.outputs.version }}"
+
+      - name: Verify release artifact
+        run: |
+          ls -la dist/
+          echo "---"
+          shasum -a 256 dist/RateBar-${{ steps.version.outputs.version }}.zip
+
+      - name: Upload artifact (always)
+        uses: actions/upload-artifact@v4
+        with:
+          name: RateBar-${{ steps.version.outputs.version }}
+          path: dist/RateBar-${{ steps.version.outputs.version }}.zip
+          retention-days: 14
+
+      - name: Create GitHub Release (tag pushes only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          ZIP="dist/RateBar-${VERSION}.zip"
+          SHA256="$(shasum -a 256 "$ZIP" | awk '{print $1}')"
+
+          NOTES_FILE="$RUNNER_TEMP/release-notes.md"
+          cat > "$NOTES_FILE" <<EOF
+          ## RateBar v${VERSION}
+
+          Notarized macOS build, ready for direct download or Homebrew Cask.
+
+          **Install via Homebrew**
+          \`\`\`sh
+          brew install --cask haha1903/voiceinput/ratebar
+          \`\`\`
+
+          **SHA256**
+          \`\`\`
+          $SHA256
+          \`\`\`
+          EOF
+
+          gh release create "v${VERSION}" "$ZIP" \
+            --title "RateBar v${VERSION}" \
+            --notes-file "$NOTES_FILE"
+
+      - name: Bump cask in homebrew-voiceinput tap
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          TAP_PAT: ${{ secrets.TAP_PAT }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.version.outputs.version }}"
+          ZIP="dist/RateBar-${VERSION}.zip"
+          SHA256="$(shasum -a 256 "$ZIP" | awk '{print $1}')"
+          TAP_DIR="$RUNNER_TEMP/homebrew-voiceinput"
+
+          git clone "https://x-access-token:${TAP_PAT}@github.com/haha1903/homebrew-voiceinput.git" "$TAP_DIR"
+          cd "$TAP_DIR"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          /usr/bin/sed -i '' -E "s/^( *version )\".*\"/\\1\"${VERSION}\"/" Casks/ratebar.rb
+          /usr/bin/sed -i '' -E "s/^( *sha256 )\".*\"/\\1\"${SHA256}\"/" Casks/ratebar.rb
+
+          if git diff --quiet; then
+            echo "No changes — cask is already at v${VERSION}. Skipping."
+            exit 0
+          fi
+
+          git add Casks/ratebar.rb
+          git commit -m "Bump ratebar to ${VERSION}"
+          git push origin main
+
+      - name: Cleanup keychain
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/build.keychain" || true
