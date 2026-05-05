@@ -1,17 +1,17 @@
 # TODO.md — RateBar
 
-## [TODO] T01: 项目骨架
+## [DONE] T01: 项目骨架
 **Dependencies**: -
 **Goal**: 建立可构建可运行的最小 Swift 6 macOS App 骨架（空 MenuBarExtra），`xcodebuild build` 与 `test` 均通过。
 **Design**: 见 PLAN.md → T01。`project.yml` (xcodegen) + `RateBar/RateBarApp.swift` + `RateBarTests/SmokeTests.swift`。
 **Test Cases**:
 - `testAppCompiles` (timeout: 5s) — 占位断言 true
-**Verification**: `xcodegen generate && xcodebuild -scheme RateBar -destination 'platform=macOS' build test`
+**Verification**: `xcodegen generate && xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" clean test`
 **Delivery Criteria**:
-- [ ] `project.yml` 存在且 xcodegen 可生成
-- [ ] build 0 warning 0 error
-- [ ] test 通过
-- [ ] README.md 写明开发环境与构建命令
+- [x] `project.yml` 存在且 xcodegen 可生成
+- [x] build 0 warning 0 error
+- [x] test 通过
+- [x] README.md 写明开发环境与构建命令
 
 ---
 

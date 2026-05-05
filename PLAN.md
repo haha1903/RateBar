@@ -34,6 +34,7 @@ T01
 
 #### Design
 - `project.yml`（xcodegen），target `RateBar`，platform macOS 26.0，Swift 6.0
+- `RateBar` / `RateBarTests` 链接 `AppIntents.framework`，避免 Xcode 26 空 SwiftUI target 的 App Intents metadata warning
 - `RateBar/RateBarApp.swift`：`@main struct RateBarApp: App` + `MenuBarExtra("RateBar", systemImage: "dollarsign.circle") { Text("Hello") }`
 - `RateBar/Info.plist`（最小，由 xcodegen 生成）
 - `Package.resolved` 不需要
@@ -47,15 +48,15 @@ T01
 ```
 brew list xcodegen >/dev/null || brew install xcodegen
 xcodegen generate
-xcodebuild -scheme RateBar -destination 'platform=macOS' build
-xcodebuild -scheme RateBar -destination 'platform=macOS' test
+xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" build
+xcodebuild -scheme RateBar -destination "platform=macOS,arch=$(uname -m)" test
 ```
 
 #### Delivery Criteria
-- [ ] `project.yml` 存在并能 `xcodegen generate` 成功
-- [ ] `xcodebuild build` 0 warning 0 error
-- [ ] `xcodebuild test` 通过
-- [ ] `README.md` 写明开发环境要求与构建命令
+- [x] `project.yml` 存在并能 `xcodegen generate` 成功
+- [x] `xcodebuild build` 0 warning 0 error
+- [x] `xcodebuild test` 通过
+- [x] `README.md` 写明开发环境要求与构建命令
 
 ---
 

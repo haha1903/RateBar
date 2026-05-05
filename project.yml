@@ -1,0 +1,59 @@
+name: RateBar
+
+options:
+  minimumXcodeGenVersion: 2.42.0
+  deploymentTarget:
+    macOS: "26.0"
+
+settings:
+  base:
+    CLANG_ANALYZER_NONNULL: YES
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 0.1.0
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_VERSION: 6.0
+
+targets:
+  RateBar:
+    type: application
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: RateBar
+    dependencies:
+      - sdk: AppIntents.framework
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: RateBar
+        INFOPLIST_KEY_LSUIElement: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.peter.ratebar
+
+  RateBarTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: RateBarTests
+    dependencies:
+      - target: RateBar
+      - sdk: AppIntents.framework
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.peter.ratebar.tests
+
+schemes:
+  RateBar:
+    build:
+      targets:
+        RateBar: all
+        RateBarTests: [test]
+    test:
+      gatherCoverageData: false
+      targets:
+        - RateBarTests
