@@ -49,6 +49,10 @@ final class RateService {
 
     /// Fetches rates, updates observable state, and persists successful results.
     func refresh() async {
+        guard !isLoading else {
+            return
+        }
+
         isLoading = true
         lastError = nil
 

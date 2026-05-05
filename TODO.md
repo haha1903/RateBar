@@ -77,7 +77,7 @@
 
 ---
 
-## [TODO] T06: 自动 + 手动刷新
+## [DONE] T06: 自动 + 手动刷新
 **Dependencies**: T05
 **Goal**: 启动立即刷新；每小时自动一次；菜单 Refresh 按钮含 loading 反馈。
 **Design**: 见 PLAN.md → T06。`RateBar/Services/RefreshScheduler.swift`。
@@ -87,8 +87,8 @@
 - `testIntervalRefresh` (timeout: 6s)
 **Verification**: `xcodebuild test`
 **Delivery Criteria**:
-- [ ] 3 测试通过
-- [ ] UI loading 反馈正常
+- [x] 3 测试通过
+- [x] UI loading 反馈正常
 
 ---
 

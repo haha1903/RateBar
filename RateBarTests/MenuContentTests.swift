@@ -29,6 +29,13 @@ final class MenuContentTests: XCTestCase {
         XCTAssertEqual(button.title, "Refresh")
     }
 
+    @MainActor
+    func testRefreshButtonShowsLoadingState() {
+        let button = RefreshButton(isLoading: true, action: {})
+
+        XCTAssertEqual(button.title, "Refreshing...")
+    }
+
     private static func makeSnapshot(
         fetchedAt: Date = Date(timeIntervalSince1970: 1_777_932_000)
     ) -> RatesSnapshot {

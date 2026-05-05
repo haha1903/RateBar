@@ -205,9 +205,10 @@ App 启动时立即刷新一次；之后每 1 小时一次；菜单中的 Refres
 - `RateBar/Services/RefreshScheduler.swift`
   - `@MainActor final class RefreshScheduler`
   - `init(service: RateService, interval: TimeInterval = 3600)`
-  - `func start()`：立即 refresh → 启动 `Timer.scheduledTimer(withTimeInterval: interval, repeats: true)`
-  - `func stop()`
-- App 启动时 `scheduler.start()`
+- `func start()`：立即 refresh → 启动可取消的 async loop，按 interval 周期 refresh
+- `func stop()`：取消后续周期 refresh
+- `RateService.refresh()` 在 loading 时直接返回，避免重复刷新重叠
+- App 启动时 `scheduler.start()`；XCTest host 启动时跳过，避免测试期间打真网络
 - Refresh 按钮在 `service.isLoading` 时禁用，文案变 "Refreshing..."
 
 #### Test Cases
@@ -221,8 +222,8 @@ xcodebuild -scheme RateBar -destination 'platform=macOS' test
 ```
 
 #### Delivery Criteria
-- [ ] 3 测试通过
-- [ ] 手动跑：UI 上 Refresh 按钮有 loading 反馈
+- [x] 3 测试通过
+- [x] UI 上 Refresh 按钮有 loading 反馈（`RefreshButton` loading 状态测试覆盖）
 
 ---
 
