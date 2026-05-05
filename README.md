@@ -60,8 +60,7 @@ Use the Launch at Login toggle to register or unregister RateBar with macOS logi
 ### Homebrew (recommended)
 
 ```sh
-brew tap haha1903/voiceinput
-brew install --cask ratebar
+brew install --cask haha1903/voiceinput/ratebar
 ```
 
 This installs a notarized, signed `.app` from the [GitHub Releases](https://github.com/haha1903/RateBar/releases). Updates ship via `brew upgrade --cask ratebar`.
