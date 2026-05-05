@@ -61,7 +61,7 @@
 
 ---
 
-## [TODO] T05: MenuBarExtra UI
+## [DONE] T05: MenuBarExtra UI
 **Dependencies**: T04
 **Goal**: 菜单栏文字 + 下拉显示 4 对汇率、最后刷新时间、Refresh / Quit 按钮。
 **Design**: 见 PLAN.md → T05。`RateBar/UI/MenuBarLabel.swift` + `MenuContent.swift`。
@@ -71,9 +71,9 @@
 - `testRefreshButtonInvokesService` (timeout: 5s)
 **Verification**: `xcodebuild test`；手动启动 .app 看效果。
 **Delivery Criteria**:
-- [ ] 3 测试通过
-- [ ] 手动验证 UI
-- [ ] README 截图
+- [x] 3 测试通过
+- [x] 手动验证 UI
+- [x] README 截图
 
 ---
 

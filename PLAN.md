@@ -188,9 +188,9 @@ xcodebuild -scheme RateBar -destination 'platform=macOS' build  # 手动跑 .app
 ```
 
 #### Delivery Criteria
-- [ ] 3 测试通过
-- [ ] 手动启动 .app 能看到菜单栏图标和下拉
-- [ ] README 加截图说明
+- [x] 3 测试通过
+- [x] 手动启动 .app 能看到菜单栏图标和下拉
+- [x] README 加截图说明
 
 ---
 
